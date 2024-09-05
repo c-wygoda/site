@@ -1,0 +1,43 @@
+#!/bin/bash
+
+set -e
+
+HUGO_VERSION=0.134.0
+
+
+SCRIPT_DIR=$(dirname "$(realpath $0)")
+BASE_DIR=$(realpath "${SCRIPT_DIR}/..")
+BIN_DIR="${BASE_DIR}/.bin"
+
+function usage() {
+    echo -n \
+        "Usage: $(basename "$0") {build,dev}
+Bootstrap the dependencies of the project.
+"
+}
+
+function bootstrap_build() {
+    echo "build"
+    if [ ! -f "${BIN_DIR}/hugo" ]; then
+        echo "installing hugo"
+        mkdir -p "${BIN_DIR}"
+        HUGO_BUILD=darwin-universal
+        HUGO_URL=https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_${HUGO_BUILD}.tar.gz
+        curl -s -L ${HUGO_URL} | tar xz - -C "${BIN_DIR}" hugo
+    fi
+}
+
+function bootstrap_dev() {
+    bootstrap_build
+    echo "dev"
+}
+
+if [ "${1:-}" = "--help" ]; then
+    usage
+elif [ "${1:-}" = "build" ]; then
+    bootstrap_build
+elif [ "${1:-}" = "dev" ]; then
+    bootstrap_dev
+else
+    usage
+fi
