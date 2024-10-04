@@ -2,8 +2,8 @@
 
 set -e
 
+EXIV2_VERSION=0.28.3
 HUGO_VERSION=0.134.0
-
 
 SCRIPT_DIR=$(dirname "$(realpath $0)")
 BASE_DIR=$(realpath "${SCRIPT_DIR}/..")
@@ -16,15 +16,29 @@ Bootstrap the dependencies of the project.
 "
 }
 
+function install_hugo() {
+    echo "installing hugo"
+    mkdir -p "${BIN_DIR}"
+    HUGO_BUILD=darwin-universal
+    HUGO_URL=https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_${HUGO_BUILD}.tar.gz
+    curl -s -L ${HUGO_URL} | tar xz -C "${BIN_DIR}" hugo
+
+}
+
+function install_exiv2() {
+    echo "installing exiv2"
+    mkdir -p "${BIN_DIR}"
+    EXIV2_BUILD=Darwin
+    EXIV2_URL=https://github.com/Exiv2/exiv2/releases/download/v${EXIV2_VERSION}/exiv2-${EXIV2_VERSION}-${EXIV2_BUILD}.tar.gz
+    curl -s -L ${EXIV2_URL} | tar xz -C "${BIN_DIR}" --strip-components=2 \
+        exiv2-${EXIV2_VERSION}-${EXIV2_BUILD}/bin/exiv2 \
+        exiv2-${EXIV2_VERSION}-${EXIV2_BUILD}/lib/libexiv2*
+}
+
 function bootstrap_build() {
     echo "build"
-    if [ ! -f "${BIN_DIR}/hugo" ]; then
-        echo "installing hugo"
-        mkdir -p "${BIN_DIR}"
-        HUGO_BUILD=darwin-universal
-        HUGO_URL=https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_${HUGO_BUILD}.tar.gz
-        curl -s -L ${HUGO_URL} | tar xz - -C "${BIN_DIR}" hugo
-    fi
+    if [ ! -f "${BIN_DIR}/hugo" ]; then install_hugo; fi
+    if [ ! -f "${BIN_DIR}/exiv2" ]; then install_exiv2; fi
 }
 
 function bootstrap_dev() {
