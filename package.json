@@ -7,9 +7,11 @@
     "build:tailwindcss": "NODE_ENV=production npx tailwindcss -i ./assets/styles/main-src.css -o ./assets/styles/main-dist.css --minify"
   },
   "dependencies": {
+    "tailwindcss": "^3.4.13"
+  },
+  "devDependencies": {
     "npm-run-all": "^4.1.5",
     "prettier": "^3.3.3",
-    "prettier-plugin-go-template": "^0.0.15",
-    "tailwindcss": "^3.4.13"
+    "prettier-plugin-go-template": "^0.0.15"
   }
 }
