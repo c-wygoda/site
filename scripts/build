@@ -1,0 +1,23 @@
+#!/bin/bash
+
+set -e
+
+SCRIPT_DIR=$(dirname "$(realpath $0)")
+BASE_DIR=$(realpath "${SCRIPT_DIR}/..")
+BIN_DIR="${BASE_DIR}/.bin"
+
+function usage() {
+    echo -n \
+        "Usage: $(basename "$0")
+Build the site.
+"
+}
+
+
+if [ "${1:-}" = "--help" ]; then
+    usage
+else
+    export PATH=${PATH}:${BASE_DIR}/.bin
+    npm run build:tailwindcss
+    hugo
+fi

@@ -1,8 +1,18 @@
+{{ $assets := newScratch }}
+{{ $assets.Add "css" (slice (resources.Get "styles/main-dist.css")) }}
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <title>{{ block "title" . }}{{ .Site.Title }}{{ end }}</title>
+    {{ if $assets.Get "css" }}
+      {{ $bundleCSS := $assets.Get "css" | resources.Concat "styles/bundle.css" | resources.Minify | resources.Fingerprint "sha256" }}
+      <link
+        type="text/css"
+        rel="stylesheet"
+        href="{{ $bundleCSS.RelPermalink }}"
+        integrity="{{ $bundleCSS.Data.Integrity }}" />
+    {{ end }}
   </head>
   <body>
     {{ block "main" . }}{{ end }}

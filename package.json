@@ -1,8 +1,15 @@
 {
   "name": "hugo",
-  "scripts": {},
+  "scripts": {
+    "dev": "npm-run-all --parallel dev:tailwind dev:site --print-name --race",
+    "dev:tailwind": "touch ./assets/styles/main-dist.css && NODE_ENV=development npx tailwindcss -i ./assets/styles/main-src.css -o ./assets/styles/main-dist.css --watch --minify",
+    "dev:site": "hugo server --baseURL http://localhost/ --port 1313 --buildDrafts --cleanDestinationDir --disableFastRender --gc --minify --noHTTPCache --printI18nWarnings --templateMetrics --templateMetricsHints",
+    "build:tailwindcss": "NODE_ENV=production npx tailwindcss -i ./assets/styles/main-src.css -o ./assets/styles/main-dist.css --minify"
+  },
   "dependencies": {
+    "npm-run-all": "^4.1.5",
     "prettier": "^3.3.3",
-    "prettier-plugin-go-template": "^0.0.15"
+    "prettier-plugin-go-template": "^0.0.15",
+    "tailwindcss": "^3.4.13"
   }
 }
